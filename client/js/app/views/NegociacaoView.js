@@ -1,8 +1,7 @@
-class NegociacaoView {
-    constructor(elemento) {
-        this._elemento = elemento;
+class NegociacaoView extends View {
+    constructor(elemento){
+        super(elemento);
     }
-
     _template(model) {
         return `<table class="table table-hover table-bordered">
                     <thead>
@@ -29,13 +28,10 @@ class NegociacaoView {
                 
                         <tfoot>
                         <td colspan="3"></td>
-                        <td>${model.negociacoes.reduce(function (total,n) {return total + n.obtemVolume;  },0.0)}
+                        <td>${model.negociacoes.reduce(function (total, n) { return total + n.obtemVolume; }, 0.0)}
                         
                         </td>
                         </tfoot>
                     </table>`;
-    }
-    _update(model) {
-        this._elemento.innerHTML = this._template(model);
     }
 }

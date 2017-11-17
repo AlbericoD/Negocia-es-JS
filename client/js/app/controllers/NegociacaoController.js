@@ -5,17 +5,27 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
         this._listaNegociacoes = new ListaNegociacoes();
-        this._view = new NegociacaoView($('#negociacaoView'));
+        this._nview = new NegociacaoView($('#negociacaoView'));
 
-        this._view._update(this._listaNegociacoes);
+        this._nview.update(this._listaNegociacoes);
+        this._mensagem = new Mensagem();
+
+        this._mensagemView = new MensagemView($('#mensagemView'));
+        this._mensagemView.update(this._mensagem);
     }
     adiciona(event) {
         event.preventDefault();
         let negociacao = this._criaNegociacao();
         this._listaNegociacoes.adiciona(negociacao);
-        this._view._update(this._listaNegociacoes);
+        this._nview.update(this._listaNegociacoes);
+
+        this._mensagem.texto = 'Negociação adicionado com sucesso!';
+        this._mensagemView.update(this._mensagem);
+
+
         this._limpaFormulario();
-        console.log(this._listaNegociacoes.negociacoes);
+
+        //console.log(this._listaNegociacoes.negociacoes);
     }
     _criaNegociacao(){
         return new Negociacao(
