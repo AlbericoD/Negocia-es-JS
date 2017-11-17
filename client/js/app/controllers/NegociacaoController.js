@@ -7,13 +7,13 @@ class NegociacaoController
         this._inputQuantidade = $( '#quantidade' );
         this._inputValor = $( '#valor' );
         this._nview = new NegociacaoView( $( '#negociacaoView' ) );
-        
+
         this._listaNegociacoes = ProxyFactory.create( new ListaNegociacoes(),
-            [ 'adiciona', 'esvazia' ], (model) => this._nview.update(model)  );
+            [ 'adiciona', 'esvazia' ], ( model ) => this._nview.update( model ) );
 
         this._nview.update( this._listaNegociacoes );
 
-        this._mensagem = ProxyFactory.create(new MensagemView(),['texto'],model =>this._mensagemView.update(model));
+        this._mensagem = ProxyFactory.create( new MensagemView(), [ 'texto' ], model => this._mensagemView.update( model ) );
         this._mensagemView = new MensagemView( $( '#mensagemView' ) );
         //this._mensagemView.update( this._mensagem );
     }
@@ -46,5 +46,19 @@ class NegociacaoController
         this._listaNegociacoes.esvazia();
         this._mensagem.texto = 'Negociações apagadas com sucesso!';
         //this._mensagemView.update( this._mensagem );
+    }
+    importaNegociacoes()
+    {
+        //NegociacaoService.obterNegociacoesDaSemana(this._listaNegociacoes);
+        let service = new NegociacaoService();
+        service.obterNegociacoesDaSemana( ( err, negociacoes ) =>
+        {
+            if ( err ) {
+                console.log( err );
+                return;
+            } 
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            console.log('importado com sucesso!');
+        } );
     }
 }
