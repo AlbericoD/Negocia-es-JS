@@ -7,16 +7,22 @@ class NegociacaoController
         this._inputQuantidade = $( '#quantidade' );
         this._inputValor = $( '#valor' );
         this._nview = new NegociacaoView( $( '#negociacaoView' ) );
-        /*    this._listaNegociacoes = new ListaNegociacoes( this,function ( model )
+        let self = this;
+        this._listaNegociacoes =  new Proxy( new ListaNegociacoes(), {
+            get( target, prop, receiver )
             {
-                console.log( this );
-                this._nview.update( model );
-            } );*/
-        this._listaNegociacoes = new ListaNegociacoes( model => this._nview.update( model ) );
-
+                if ( [ 'adiciona', 'esvazia' ].includes( prop ) && typeof ( target[ prop ] ) == typeof ( Function ) ) {
+                    return function ()
+                    {
+                        Reflect.apply( target[ prop ], target, arguments );
+                        self._nview.update( target );
+                    }
+                }
+                return Reflect.get( target, prop, receiver );
+            }
+        } );
         this._nview.update( this._listaNegociacoes );
         this._mensagem = new Mensagem();
-
         this._mensagemView = new MensagemView( $( '#mensagemView' ) );
         this._mensagemView.update( this._mensagem );
     }
@@ -25,15 +31,9 @@ class NegociacaoController
         event.preventDefault();
         let negociacao = this._criaNegociacao();
         this._listaNegociacoes.adiciona( negociacao );
-        //this._nview.update( this._listaNegociacoes );
-
         this._mensagem.texto = 'Negociação adicionado com sucesso!';
         this._mensagemView.update( this._mensagem );
-
-
         this._limpaFormulario();
-
-        //console.log(this._listaNegociacoes.negociacoes);
     }
     _criaNegociacao()
     {
@@ -53,8 +53,6 @@ class NegociacaoController
     apaga()
     {
         this._listaNegociacoes.esvazia();
-        //this._nview.update(this._listaNegociacoes);
-
         this._mensagem.texto = 'Negociações apagadas com sucesso!';
         this._mensagemView.update( this._mensagem );
     }
