@@ -19,8 +19,8 @@ class NegociacaoView extends View {
                             <tr>
                                 <td>${DateHelper.dataParaTexto(n.data)}</td>
                                 <td>${n.quantidade}</td>
-                                <td>${n.valor}</td>
-                                <td>${n.obtemVolume}</td>
+                                <td>R$ ${n.valor}</td>
+                                <td>R$ ${n.obtemVolume}</td>
                             </tr>
 
                             `).join('')}
@@ -28,7 +28,7 @@ class NegociacaoView extends View {
                 
                         <tfoot>
                         <td colspan="3"></td>
-                        <td>${model.negociacoes.reduce(function (total, n) { return total + n.obtemVolume; }, 0.0)}
+                        <td>R$ ${model.volumeTotal}
                         
                         </td>
                         </tfoot>
